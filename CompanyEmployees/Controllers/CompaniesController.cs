@@ -111,17 +111,24 @@ namespace CompanyEmployees.Controllers
         [HttpPut("{companyId}")]
         public IActionResult UpdateCompany(Guid companyId, [FromBody] CompanyForUpdateDto companyDto)
         {
-            var company = _repositoryManager.Company.GetCompany(companyId, true);
-            if (company == null)
+            if (companyDto ==null)
+            {
+                BadRequest("EmployeeForUpdateDto is empty");
+            }
+            var companyEntity = _repositoryManager.Company.GetCompany(companyId, trackChanges : true); //moet true zijn
+            if (companyEntity == null)
             {
                 NotFound(); //404
             }
             //ovwel manueel
-            
+            //companyEntity.Name = companyDto.Name;
+            //companyEntity.Address = companyDto.Address;
+            //companyEntity.Country = companyDto.Country;
+
             //ofwel zelf ofwel met automapper
-            _mapper.Map(companyDto, company);
+            _mapper.Map(companyDto, companyEntity);
             _repositoryManager.Save();
-            return Ok(company);
+            return Ok(companyEntity);
         }
     }
 }
