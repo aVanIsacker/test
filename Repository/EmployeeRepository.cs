@@ -14,6 +14,11 @@ namespace Repository
         {
         }
 
+        public void DeleteEmployee(Employee employee)
+        {
+            Delete(employee);
+        }
+
         public IEnumerable<Employee> GetAllEmployees(bool trackChanges)
         {
             return FindAll(trackChanges).OrderBy(e => e.Age).ToList();

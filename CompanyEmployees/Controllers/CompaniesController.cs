@@ -50,5 +50,18 @@ namespace CompanyEmployees.Controllers
                 return Ok(companyDto); //200 ok statusboodschap
             }
         }
+
+        [HttpDelete("{id}")]
+        public IActionResult DeleteCompany(Guid id)
+        {
+            var company = _repositoryManager.Company.GetCompany(id, false); //no trackchanges
+            if (company == null)
+            {
+                return NotFound();
+            }
+            _repositoryManager.Company.DeleteCompany(company);
+            _repositoryManager.Save();
+            return NoContent(); //204 alles dat met 2 begint is goed
+        }
     }
 }

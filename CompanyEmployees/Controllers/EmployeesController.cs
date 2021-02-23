@@ -52,5 +52,18 @@ namespace CompanyEmployees.Controllers
             }
         }
 
+        [HttpDelete("{id}")]
+        public IActionResult DeleteEmployee(Guid id)
+        {
+            var employee = _repositoryManager.Employee.GetEmployee(id, false); //no trackchanges
+            if (employee == null)
+            {
+                return NotFound();
+            }
+            _repositoryManager.Employee.DeleteEmployee(employee);
+            _repositoryManager.Save();
+            return NoContent();
+        }
+
     }
 }

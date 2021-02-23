@@ -12,6 +12,12 @@ namespace Repository
     {
         public CompanyRepository(RepositoryContext repositoryContext) : base(repositoryContext)
         {
+            
+        }
+
+        public void DeleteCompany(Company company)
+        {
+            Delete(company);
         }
 
         public IEnumerable<Company> GetAllCompanies(bool trackChanges)
