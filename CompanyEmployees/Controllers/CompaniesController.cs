@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Contracts;
 using Entities.DataTransferObjects;
+using Entities.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -62,6 +63,65 @@ namespace CompanyEmployees.Controllers
             _repositoryManager.Company.DeleteCompany(company);
             _repositoryManager.Save();
             return NoContent(); //204 alles dat met 2 begint is goed
+        }
+
+        //[HttpPost] //via body
+        //public IActionResult CreateCompany([FromBody] Company company)
+        //{
+        //    if (company==null)
+        //    {
+
+        //        BadRequest("Company object is invalid");
+        //    }
+
+        //    _repositoryManager.Company.CreateCompany(company);
+        //    _repositoryManager.Save();
+        //    return Ok(company);
+        //    //return NoContent();
+        //}
+
+        [HttpPost] //via body   //nu met DTO
+        public IActionResult CreateCompany([FromBody] CompanyForCreationDto companyDto)
+        {
+            if (companyDto == null)
+            {
+
+                BadRequest("Company object is invalid");
+            }
+            //To do : companyDto object ozetten naaar een company object
+            // 2 manieren mogelijk
+
+            //ofwel manueel code schrijven
+
+            //Company company = new Company()
+            //{
+            //    Name = companyDto.Name,
+            //    Address = companyDto.Address,
+            //    Country = companyDto.Country
+            //};
+            //ofwel met automapper //altijd configuratie nodig die 1 keer wordt aangesproken bij opstarten
+
+            Company company = _mapper.Map<Company>(companyDto); //automapper, dus dit doet hetzelfde als die manuele --> maar ook in mappingprofile nodig
+            _repositoryManager.Company.CreateCompany(company);
+            _repositoryManager.Save();
+            return Ok(company);
+            //return NoContent();
+        }
+
+        [HttpPut("{companyId}")]
+        public IActionResult UpdateCompany(Guid companyId, [FromBody] CompanyForUpdateDto companyDto)
+        {
+            var company = _repositoryManager.Company.GetCompany(companyId, true);
+            if (company == null)
+            {
+                NotFound(); //404
+            }
+            //ovwel manueel
+            
+            //ofwel zelf ofwel met automapper
+            _mapper.Map(companyDto, company);
+            _repositoryManager.Save();
+            return Ok(company);
         }
     }
 }

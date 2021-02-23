@@ -17,6 +17,14 @@ namespace CompanyEmployees.Mapper
                             c => c.MapFrom(c => c.Address + " " + c.Country));
 
             CreateMap<Employee, EmployeeDto>();
+
+            CreateMap<CompanyForCreationDto, Company>(); //deze is voor automappen p 82.    --> van naar, dus volgorde is hier omgekeer
+
+            CreateMap<EmployeeForCreationDto, Employee>();
+
+            //update
+            CreateMap<EmployeeForUpdateDto, Employee>();  //ook al is het voor een update --> hier schrijf je toch CreateMap
+            CreateMap<CompanyForUpdateDto, Company>();
         }
     }
 }

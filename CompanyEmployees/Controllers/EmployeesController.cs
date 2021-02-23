@@ -64,6 +64,48 @@ namespace CompanyEmployees.Controllers
             _repositoryManager.Save();
             return NoContent();
         }
+        [HttpPost] //via body
+        public IActionResult CreateEmployeeForCOmpany(Guid companyId, [FromBody] EmployeeForCreationDto employeeDto)
+        {
+            if (employeeDto == null)
+            {
 
+                BadRequest("employee object is invalid");
+            }
+
+            var company = _repositoryManager.Company.GetCompany(companyId, false);
+            if (companyId == null)
+            {
+                return NotFound();
+            }
+
+            var employee = _mapper.Map<Employee>(employeeDto);
+            _repositoryManager.Employee.CreateEmployeeForCompany(companyId, employee);
+            _repositoryManager.Save();
+            return Ok(employeeDto);
+            //return NoContent();
+        }
+
+        [HttpPut("{employeeId}")]
+        public IActionResult UpdateEmployee(Guid employeeId, [FromBody] EmployeeForUpdateDto employeeDto)
+        {
+            if (employeeDto==null)
+            {
+                BadRequest("EmployeeForUpdateDto is empty");
+            }
+            var employee = _repositoryManager.Employee.GetEmployee(employeeId, true); //moet op true staan
+            if (employee == null)
+            {
+                NotFound(); //404
+            }
+            //ovwel manueel
+            //employee.Name = employee.Name;
+            //employee.Age = employeeDto.Age;
+            //employee.Position = employeeDto.Position;
+            //ofwel zelf ofwel met automapper
+            _mapper.Map(employeeDto, employee);
+            _repositoryManager.Save();
+            return Ok(employee);
+        }
     }
 }
